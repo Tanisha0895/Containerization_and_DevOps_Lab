@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build: ./backend
+    container_name: pa1_backend
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    depends_on:
+      - db
+    networks:
+      ipvlan_net:
+        ipv4_address: 192.168.170.10
+
+  db:
+    image: postgres:15-alpine
+    container_name: pa1_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      ipvlan_net:
+        ipv4_address: 192.168.170.11
+
+networks:
+  ipvlan_net:
+    external: true
+
+volumes:
+  pgdata:
