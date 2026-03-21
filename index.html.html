@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Assignment 1 — Containerized Web App | Tanisha | DevOps & Containerization</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f5f3ef;--ink:#0d0d0d;--muted:#7a7a72;--border:#d6d3cb;--card:#ffffff;--accent:#e63329;--accent2:#1a6bff;--tag-bg:#0d0d0d;--tag-text:#f5f3ef;--code-bg:#0d0d0d;}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Outfit',sans-serif;line-height:1.6;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(245,243,239,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:56px;}
+.topbar-logo{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:10px;}
+.topbar-logo .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:0.7}}
+.topbar-links{display:flex;gap:24px;font-size:13px;font-weight:600;}
+.topbar-links a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.topbar-links a:hover{color:var(--ink)}
+.hero{padding:100px 40px 80px;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.hero-eyebrow::before{content:'';display:block;width:32px;height:2px;background:var(--accent);}
+h1{font-size:clamp(42px,6vw,80px);font-weight:800;line-height:1.0;letter-spacing:-2px;margin-bottom:24px;}
+h1 em{font-style:normal;color:var(--accent);}
+.hero-desc{font-size:17px;color:var(--muted);max-width:500px;line-height:1.7;margin-bottom:32px;}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;background:var(--tag-bg);color:var(--tag-text);padding:5px 12px;border-radius:4px;letter-spacing:0.5px;}
+.tag.outline{background:transparent;color:var(--ink);border:1.5px solid var(--border);}
+.hero-meta .big-num{font-size:120px;font-weight:800;line-height:1;color:var(--border);letter-spacing:-6px;font-family:'IBM Plex Mono',monospace;user-select:none;}
+.hero-meta .uni{font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-align:right;line-height:1.6;}
+.divider{max-width:1100px;margin:0 auto;border:none;border-top:1px solid var(--border);}
+section{max-width:1100px;margin:0 auto;padding:64px 40px;}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:32px;display:flex;align-items:center;gap:12px;}
+.section-label span{display:block;flex:1;height:1px;background:var(--border);}
+h2{font-size:clamp(24px,3vw,36px);font-weight:700;letter-spacing:-1px;margin-bottom:24px;}
+h3{font-size:18px;font-weight:700;margin:32px 0 8px;}
+.overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:40px;}
+.ov-card{background:var(--card);padding:28px 24px;transition:background 0.2s;}
+.ov-card:hover{background:#fafaf8}
+.ov-icon{font-size:28px;margin-bottom:12px;}
+.ov-title{font-weight:700;font-size:15px;margin-bottom:6px;}
+.ov-desc{font-size:13px;color:var(--muted);line-height:1.5;}
+.arch-wrap{background:var(--code-bg);border-radius:16px;padding:40px;overflow-x:auto;}
+.arch-title{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#666;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;}
+.arch-diagram{font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:2;white-space:pre;}
+.c1{color:#f5f3ef}.c2{color:#00f5a0}.c3{color:#00d4ff}.c4{color:#ffd700}.c5{color:#ff6b6b}.dim{color:#444}
+.file-tree{background:var(--code-bg);border-radius:16px;padding:32px;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:2;}
+.file-tree .dir{color:#ffd700}.file-tree .file{color:#f5f3ef}.file-tree .comment{color:#555}
+.steps{display:flex;flex-direction:column;gap:2px}
+.step{display:grid;grid-template-columns:64px 1fr;border:1px solid var(--border);background:var(--card);overflow:hidden;transition:border-color 0.2s;}
+.step:first-child{border-radius:12px 12px 0 0}.step:last-child{border-radius:0 0 12px 12px}
+.step:hover{border-color:var(--ink)}
+.step-num{background:var(--ink);color:var(--bg);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:18px;min-height:80px;}
+.step-body{padding:20px 24px}
+.step-title{font-weight:700;font-size:15px;margin-bottom:4px}
+.step-desc{font-size:14px;color:var(--muted)}
+.code-block{background:var(--code-bg);border-radius:12px;overflow:hidden;margin:16px 0;}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-bottom:1px solid #222;}
+.code-lang{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#666;letter-spacing:1px;text-transform:uppercase;}
+.code-dots{display:flex;gap:6px}
+.code-dots span{width:10px;height:10px;border-radius:50%;}
+.code-dots .r{background:#ff5f57}.code-dots .y{background:#febc2e}.code-dots .g{background:#28c840}
+pre{padding:20px 18px;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.8;color:#f5f3ef;overflow-x:auto;margin:0;}
+pre .cmd{color:#00f5a0}pre .flag{color:#00d4ff}pre .str{color:#ffd700}pre .comment{color:#555}pre .kw{color:#ff6b6b}pre .fn{color:#c792ea}
+.api-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.api-table th{background:var(--ink);color:var(--bg);padding:14px 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;text-align:left;font-weight:600;}
+.api-table td{padding:14px 20px;border-top:1px solid var(--border);font-size:14px;}
+.api-table tr:hover td{background:#fafaf8}
+.method{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;padding:3px 10px;border-radius:4px;}
+.get{background:#e8f5e9;color:#2e7d32}
+.persist-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;}
+.ps-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;position:relative;overflow:hidden;}
+.ps-card::before{content:attr(data-n);position:absolute;right:16px;top:8px;font-family:'IBM Plex Mono',monospace;font-size:48px;font-weight:700;color:var(--border);line-height:1;}
+.ps-card h4{font-size:14px;font-weight:700;margin-bottom:8px}
+.ps-card p{font-size:13px;color:var(--muted);line-height:1.5}
+footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;}
+footer .f-left{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);line-height:1.8;}
+footer .f-right{font-size:28px;font-weight:800;color:var(--border);letter-spacing:-1px;}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+@media(max-width:768px){
+  .topbar{padding:0 20px}.hero{grid-template-columns:1fr;padding:60px 20px 40px}.hero-meta{display:none}
+  section{padding:40px 20px}.overview-grid{grid-template-columns:repeat(2,1fr)}.persist-steps{grid-template-columns:1fr}
+  .step{grid-template-columns:48px 1fr}footer{flex-direction:column;gap:20px;padding:40px 20px}
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-logo"><div class="dot"></div>DevOps Assignment 1 — Tanisha</div>
+  <div class="topbar-links">
+    <a href="#overview">Overview</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#code">Code</a>
+    <a href="#setup">Setup</a>
+    <a href="#api">API</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">Containerization &amp; DevOps — UPES SoCS</div>
+    <h1>Project<br/>Assignment<br/><em>One.</em></h1>
+    <p class="hero-desc">A fully containerized web application built with Python Flask and PostgreSQL, orchestrated using Docker Compose with IPvlan networking and persistent named volumes.</p>
+    <div class="hero-tags">
+      <span class="tag">🐳 Docker</span>
+      <span class="tag">🐍 Python Flask</span>
+      <span class="tag">🐘 PostgreSQL</span>
+      <span class="tag">🌐 IPvlan</span>
+      <span class="tag outline">Docker Compose</span>
+      <span class="tag outline">Named Volumes</span>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="big-num">P1</div>
+    <div class="uni">University of Petroleum<br/>&amp; Energy Studies<br/>School of Computer Science</div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="section-label">01 — Overview <span></span></div>
+  <h2>What this project does</h2>
+  <div class="overview-grid fade-in">
+    <div class="ov-card"><div class="ov-icon">🐍</div><div class="ov-title">Flask Backend</div><div class="ov-desc">Python Flask server serving a web page and a REST API endpoint on port 5000.</div></div>
+    <div class="ov-card"><div class="ov-icon">🐘</div><div class="ov-title">PostgreSQL DB</div><div class="ov-desc">Relational database with auto-initialized schema via init.sql on container startup.</div></div>
+    <div class="ov-card"><div class="ov-icon">🌐</div><div class="ov-title">IPvlan Network</div><div class="ov-desc">Custom Docker IPvlan network giving each container its own static IP on the LAN.</div></div>
+    <div class="ov-card"><div class="ov-icon">💾</div><div class="ov-title">Named Volume</div><div class="ov-desc">Docker named volume <code style="background:#f0ede8;padding:1px 6px;border-radius:3px;font-size:12px">pgdata</code> ensures data persists across container restarts.</div></div>
+  </div>
+  <div class="file-tree fade-in">
+    <div style="color:#666;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">PROJECT STRUCTURE</div>
+<span class="dir">Assignment 1/</span>
+<span class="dim">├── </span><span class="dir">Backend/</span>
+<span class="dim">│   ├── </span><span class="file">main.py</span>          <span class="comment">← Flask server (routes and API)</span>
+<span class="dim">│   ├── </span><span class="file">Dockerfile</span>       <span class="comment">← Backend Docker image</span>
+<span class="dim">│   ├── </span><span class="file">requirements.txt</span> <span class="comment">← Python dependencies (flask)</span>
+<span class="dim">│   └── </span><span class="dir">templates/</span>
+<span class="dim">│       └── </span><span class="file">index.html</span>   <span class="comment">← Web UI served by Flask</span>
+<span class="dim">├── </span><span class="dir">database/</span>
+<span class="dim">│   └── </span><span class="file">init.sql</span>         <span class="comment">← Auto-creates users table</span>
+<span class="dim">├── </span><span class="file">docker-compose.yml</span>   <span class="comment">← Orchestrates all containers</span>
+<span class="dim">└── </span><span class="file">README.md</span>            <span class="comment">← Project documentation</span>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="section-label">02 — Architecture <span></span></div>
+  <h2>Network &amp; Container Design</h2>
+  <div class="arch-wrap fade-in">
+    <div class="arch-title">// System Architecture Diagram</div>
+    <div class="arch-diagram"><span class="c1">  Browser / Client</span>
+<span class="dim">          │</span>
+<span class="dim">          ▼  http://localhost:5000</span>
+<span class="c4">  Docker Host  (WSL2 / Windows)</span>
+<span class="dim">          │</span>
+<span class="dim">          ▼</span>
+<span class="c2">  IPvlan Network  ──  subnet: 192.168.160.0/20</span>
+<span class="dim">          │             gateway: 192.168.160.1</span>
+<span class="dim">          │             mode: L2  |  parent: eth0</span>
+<span class="dim">          │</span>
+<span class="dim">    ┌─────┴──────────────────────┐</span>
+<span class="dim">    ▼                            ▼</span>
+<span class="c3">  pa1_backend                pa1_db</span>
+<span class="c1">  Python + Flask              PostgreSQL 15</span>
+<span class="c2">  IP: 192.168.170.10          IP: 192.168.170.11</span>
+<span class="c4">  Port: 5000                  Port: 5432</span>
+<span class="dim">                                   │</span>
+<span class="dim">                                   ▼</span>
+<span class="c5">                             pgdata</span>
+<span class="c1">                             Named Volume</span>
+<span class="dim">                             /var/lib/postgresql/data</span></div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- CODE -->
+<section id="code">
+  <div class="section-label">03 — Source Code <span></span></div>
+  <h2>Project Files</h2>
+
+  <h3>Backend/main.py</h3>
+  <div class="code-block fade-in">
+    <div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">python</div></div>
+    <pre><span class="kw">from</span> flask <span class="kw">import</span> Flask, render_template
+
+app = Flask(__name__)
+
+<span class="fn">@app.route</span>(<span class="str">'/'</span>)
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> render_template(<span class="str">"index.html"</span>)
+
+<span class="fn">@app.route</span>(<span class="str">'/api'</span>)
+<span class="kw">def</span> <span class="fn">api</span>():
+    <span class="kw">return</span> {
+        <span class="str">"message"</span>: <span class="str">"DevOps Project 🚀"</span>,
+        <span class="str">"status"</span>: <span class="str">"Backend running successfully"</span>
+    }
+
+<span class="kw">if</span> __name__ == <span class="str">'__main__'</span>:
+    app.run(host=<span class="str">'0.0.0.0'</span>, port=<span class="str">5000</span>)</pre>
+  </div>
+
+  <h3>Backend/requirements.txt</h3>
+  <div class="code-block fade-in">
+    <div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">text</div></div>
+    <pre>flask</pre>
+  </div>
+
+  <h3>Backend/Dockerfile</h3>
+  <div class="code-block fade-in">
+    <div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">dockerfile</div></div>
+    <pre><span class="kw">FROM</span> python:3.9
+
+<span class="kw">WORKDIR</span> /app
+
+<span class="kw">COPY</span> . .
+
+<span class="kw">RUN</span> pip install -r requirements.txt
+
+<span class="kw">EXPOSE</span> <span class="str">5000</span>
+
+<span class="kw">CMD</span> [<span class="str">"python"</span>, <span class="str">"main.py"</span>]</pre>
+  </div>
+
+  <h3>database/init.sql</h3>
+  <div class="code-block fade-in">
+    <div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">sql</div></div>
+    <pre><span class="kw">CREATE TABLE IF NOT EXISTS</span> users(
+  id <span class="fn">SERIAL PRIMARY KEY</span>,
+  name <span class="fn">TEXT</span>
+);</pre>
+  </div>
+
+  <h3>docker-compose.yml</h3>
+  <div class="code-block fade-in">
+    <div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">yaml</div></div>
+    <pre><span class="kw">version:</span> <span class="str">"3.9"</span>
+
+<span class="kw">services:</span>
+
+  <span class="fn">backend:</span>
+    build: ./Backend
+    container_name: pa1_backend
+    <span class="kw">ports:</span>
+      - <span class="str">"5000:5000"</span>
+    <span class="kw">environment:</span>
+      DB_HOST: db
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    depends_on:
+      - db
+    <span class="kw">networks:</span>
+      <span class="fn">ipvlan_net:</span>
+        ipv4_address: 192.168.170.10
+
+  <span class="fn">db:</span>
+    image: postgres:15-alpine
+    container_name: pa1_db
+    <span class="kw">environment:</span>
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    <span class="kw">volumes:</span>
+      - pgdata:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    <span class="kw">networks:</span>
+      <span class="fn">ipvlan_net:</span>
+        ipv4_address: 192.168.170.11
+
+<span class="kw">networks:</span>
+  <span class="fn">ipvlan_net:</span>
+    external: true
+
+<span class="kw">volumes:</span>
+  pgdata:</pre>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- SETUP -->
+<section id="setup">
+  <div class="section-label">04 — Setup <span></span></div>
+  <h2>How to run this project</h2>
+  <div class="steps fade-in">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-title">Create Project Directory</div>
+        <div class="step-desc">Create and navigate into the project folder in WSL2 terminal.</div>
+        <div class="code-block"><div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="cmd">mkdir</span> devops-project
+<span class="cmd">cd</span> devops-project</pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-title">Create IPvlan Network (run only once)</div>
+        <div class="step-desc">Creates a custom Docker IPvlan network with static IPs for containers.</div>
+        <div class="code-block"><div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="cmd">docker network create</span> \
+  <span class="flag">-d ipvlan</span> \
+  <span class="flag">--subnet=</span><span class="str">192.168.160.0/20</span> \
+  <span class="flag">--gateway=</span><span class="str">192.168.160.1</span> \
+  <span class="flag">-o ipvlan_mode=l2</span> \
+  <span class="flag">-o parent=eth0</span> \
+  ipvlan_net</pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-title">Build &amp; Start Containers</div>
+        <div class="step-desc">Docker Compose builds the Flask image and starts both containers in detached mode.</div>
+        <div class="code-block"><div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="cmd">docker compose up</span> <span class="flag">--build -d</span></pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-title">Verify Everything is Running</div>
+        <div class="step-desc">Check containers, network, images and volumes.</div>
+        <div class="code-block"><div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="cmd">docker ps</span>
+<span class="cmd">docker network inspect</span> ipvlan_net
+<span class="cmd">docker volume ls</span>
+<span class="cmd">docker images</span></pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <div class="step-title">Open App in Browser</div>
+        <div class="step-desc">Visit the running Flask application and test the API endpoint.</div>
+        <div class="code-block"><div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">bash</div></div>
+        <pre><span class="comment"># Open web app</span>
+http://localhost:5000
+
+<span class="comment"># Test API</span>
+<span class="cmd">curl</span> http://localhost:5000/api</pre></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- API -->
+<section id="api">
+  <div class="section-label">05 — API Reference <span></span></div>
+  <h2>Endpoints</h2>
+  <table class="api-table fade-in">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Response</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method get">GET</span></td><td><code>/</code></td><td>Serves the main web page (index.html)</td><td>HTML page</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><code>/api</code></td><td>Returns project status as JSON</td><td><code>{"message": "...", "status": "..."}</code></td></tr>
+    </tbody>
+  </table>
+  <div class="code-block fade-in" style="margin-top:24px">
+    <div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">bash — API output</div></div>
+    <pre><span class="cmd">curl</span> http://localhost:5000/api
+
+<span class="comment"># Output:</span>
+{
+  <span class="str">"message"</span>: <span class="str">"DevOps Project 🚀"</span>,
+  <span class="str">"status"</span>: <span class="str">"Backend running successfully"</span>
+}</pre>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- PERSISTENCE -->
+<section id="persistence">
+  <div class="section-label">06 — Volume Persistence <span></span></div>
+  <h2>Data survives container restarts</h2>
+  <p style="color:var(--muted);margin-bottom:24px;font-size:15px">The named volume <code style="background:#f0ede8;padding:2px 8px;border-radius:4px">pgdata</code> stores PostgreSQL data permanently. Even after stopping all containers, data remains intact.</p>
+  <div class="persist-steps fade-in">
+    <div class="ps-card" data-n="1"><h4>Start Containers</h4><p>Run <code style="font-size:12px;background:#f0ede8;padding:1px 5px;border-radius:3px">docker compose up -d</code>. Both Flask and PostgreSQL start with pgdata volume mounted.</p></div>
+    <div class="ps-card" data-n="2"><h4>Stop Containers</h4><p>Run <code style="font-size:12px;background:#f0ede8;padding:1px 5px;border-radius:3px">docker compose down</code>. Containers stop but the named volume is NOT deleted.</p></div>
+    <div class="ps-card" data-n="3"><h4>Restart &amp; Verify</h4><p>Run <code style="font-size:12px;background:#f0ede8;padding:1px 5px;border-radius:3px">docker compose up -d</code> again. Volume and data still present! ✓</p></div>
+  </div>
+  <div class="code-block fade-in" style="margin-top:24px">
+    <div class="code-header"><div class="code-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="code-lang">bash — persistence test</div></div>
+    <pre><span class="comment"># 1. Start containers</span>
+<span class="cmd">docker compose up -d</span>
+
+<span class="comment"># 2. Stop containers (volume stays!)</span>
+<span class="cmd">docker compose down</span>
+
+<span class="comment"># 3. Confirm volume still exists</span>
+<span class="cmd">docker volume ls</span> | grep pgdata
+
+<span class="comment"># 4. Restart</span>
+<span class="cmd">docker compose up -d</span>
+
+<span class="comment"># 5. Volume is still there ✓</span>
+<span class="cmd">docker volume ls</span></pre>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<footer>
+  <div class="f-left">
+    Containerization &amp; DevOps — Project Assignment 1<br/>
+    Tanisha — University of Petroleum &amp; Energy Studies, SoCS<br/>
+    <span style="color:#bbb">Python Flask · PostgreSQL · Docker Compose · IPvlan · Named Volumes</span>
+  </div>
+  <div class="f-right">2025</div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold: 0.1});
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
