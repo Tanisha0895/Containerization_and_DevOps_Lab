@@ -10,6 +10,11 @@ Assignment 1
 **SAP ID:** 500120261
 
 ---
+| Resource | Link |
+| --- | --- |
+| 🌐 Live Project Page | [Open Site](https://tanisha0895.github.io/Containerization_and_DevOps_Lab/Assignment%201/intro.html) |
+
+---
 
 ## Project Overview
 
