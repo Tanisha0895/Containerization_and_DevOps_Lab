@@ -5,7 +5,7 @@
 
 ## ASSIGNMENT
 
-* [Assignment 1](Assignment 1/README.md)
+* [Assignment 1](Assignment1/README.md)
 
 ##  Lab 
 
