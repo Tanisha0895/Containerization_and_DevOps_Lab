@@ -3,447 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment 1 — Containerization & DevOps</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Assignment 1 - Containerization and DevOps</title>
     <style>
-        :root {
-            --bg: #0a0e1a;
-            --surface: #111827;
-            --border: #1e2d45;
-            --accent: #00d4ff;
-            --accent2: #7c3aed;
-            --text: #e2e8f0;
-            --muted: #64748b;
-            --green: #22d3a5;
-            --yellow: #fbbf24;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Syne', sans-serif;
-            line-height: 1.7;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .container {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #24292e;
+            background: #ffffff;
             max-width: 900px;
             margin: 0 auto;
-            padding: 60px 24px 100px;
-            position: relative;
-            z-index: 1;
+            padding: 40px 20px;
         }
-        .back {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: var(--muted);
-            text-decoration: none;
-            margin-bottom: 40px;
-            transition: color 0.2s;
+        a { color: #0366d6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        h1 { font-size: 2em; border-bottom: 1px solid #eaecef; padding-bottom: 10px; margin-top: 0; }
+        h2 { font-size: 1.5em; border-bottom: 1px solid #eaecef; padding-bottom: 8px; margin-top: 40px; }
+        h3 { font-size: 1.2em; margin-top: 24px; }
+        hr { border: none; border-top: 1px solid #eaecef; margin: 24px 0; }
+        code {
+            background: #f6f8fa;
+            border-radius: 3px;
+            font-size: 85%;
+            padding: 2px 6px;
+            font-family: "SFMono-Regular", Consolas, monospace;
         }
-        .back:hover { color: var(--accent); }
-        .hero {
-            margin-bottom: 56px;
-            padding-bottom: 40px;
-            border-bottom: 1px solid var(--border);
-        }
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0,212,255,0.08);
-            border: 1px solid rgba(0,212,255,0.2);
-            border-radius: 100px;
-            padding: 6px 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: var(--accent);
-            margin-bottom: 24px;
-        }
-        .badge-dot {
-            width: 6px; height: 6px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-        h1 {
-            font-size: clamp(28px, 5vw, 46px);
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.15;
-            margin-bottom: 16px;
-        }
-        .hero-sub { color: var(--muted); font-size: 15px; margin-bottom: 24px; }
-        .info-row { display: flex; flex-wrap: wrap; gap: 20px; }
-        .info-chip { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
-        .info-chip span { color: var(--text); font-weight: 600; }
-        .section { margin-bottom: 56px; }
-        .section-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-        h2 { font-size: 22px; font-weight: 800; margin-bottom: 12px; color: var(--text); }
-        h3 {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--accent);
-            margin: 24px 0 8px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        p { color: #94a3b8; font-size: 15px; margin-bottom: 12px; }
-        .stack { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
-        .tag {
-            background: rgba(124,58,237,0.1);
-            border: 1px solid rgba(124,58,237,0.25);
-            color: #a78bfa;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            padding: 5px 12px;
+        pre {
+            background: #f6f8fa;
             border-radius: 6px;
-        }
-        .tag.green {
-            background: rgba(34,211,165,0.08);
-            border-color: rgba(34,211,165,0.2);
-            color: var(--green);
-        }
-        .screenshot-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-        .screenshot-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            background: #0f172a;
-            border-bottom: 1px solid var(--border);
-        }
-        .dots { display: flex; gap: 6px; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .dot.r { background: #ef4444; }
-        .dot.y { background: #fbbf24; }
-        .dot.g { background: #22c55e; }
-        .screenshot-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
-        .screenshot-card img { width: 100%; display: block; }
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-            margin: 20px 0;
-        }
-        .info-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .info-card-icon { font-size: 28px; margin-bottom: 12px; }
-        .info-card h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-        .info-card p { font-size: 13px; color: var(--muted); margin: 0; }
-        .code-block {
-            background: #0d1117;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            color: #7dd3fc;
+            padding: 16px;
             overflow-x: auto;
-            margin: 16px 0;
-            white-space: pre;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.5;
         }
-        .pros-cons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 12px 0;
-        }
-        @media (max-width: 600px) { .pros-cons { grid-template-columns: 1fr; } }
-        .pro, .con {
-            background: var(--surface);
-            border-radius: 10px;
-            padding: 14px 16px;
-            font-size: 13px;
-        }
-        .pro { border: 1px solid rgba(34,211,165,0.2); color: var(--green); }
-        .con { border: 1px solid rgba(251,191,36,0.2); color: var(--yellow); }
-        .pro strong, .con strong {
-            display: block;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-            opacity: 0.7;
-        }
-        .flow {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 20px 0;
-            padding: 20px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-        }
-        .flow-item {
-            background: #0f172a;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: var(--text);
-            text-align: center;
-        }
-        .flow-item small { display: block; color: var(--muted); font-size: 10px; margin-top: 3px; }
-        .flow-arrow { color: var(--accent); font-size: 18px; }
+        pre code { background: none; padding: 0; font-size: 100%; }
+        table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+        th, td { border: 1px solid #dfe2e5; padding: 8px 12px; text-align: left; }
+        th { background: #f6f8fa; font-weight: 600; }
+        tr:nth-child(even) { background: #f6f8fa; }
+        img { max-width: 100%; border: 1px solid #dfe2e5; border-radius: 6px; margin: 12px 0; display: block; }
+        blockquote { border-left: 4px solid #dfe2e5; padding: 0 16px; color: #6a737d; margin: 0; }
+        ul, ol { padding-left: 24px; }
+        li { margin: 4px 0; }
+        .nav { margin-bottom: 24px; font-size: 14px; }
     </style>
 </head>
 <body>
-<div class="container">
 
-  <a class="back" href="../">← Back to Home</a>
+<div class="nav"><a href="../">← Back to Home</a></div>
 
-    <div class="hero">
-        <div class="badge"><div class="badge-dot"></div> Assignment 1</div>
-        <h1>Containerized Web App<br>with Docker & PostgreSQL</h1>
-        <p class="hero-sub">Multi-stage Docker Build · IPvlan Network · Named Volume Persistence</p>
-        <div class="info-row">
-            <div class="info-chip">Name → <span>Tanisha Thakur</span></div>
-            <div class="info-chip">SAP ID → <span>500120261</span></div>
-            <div class="info-chip">Batch → <span>B3</span></div>
-        </div>
-        <div class="stack" style="margin-top:20px">
-            <span class="tag">🐳 Docker</span>
-            <span class="tag">🐍 Python Flask</span>
-            <span class="tag">🐘 PostgreSQL</span>
-            <span class="tag">🌐 IPvlan</span>
-            <span class="tag">💾 Named Volume</span>
-            <span class="tag">🔧 Docker Compose</span>
-        </div>
-    </div>
+<h1>Containerized Web Application with PostgreSQL using Docker Compose and IPvlan</h1>
 
-    <!-- Overview -->
-    <div class="section">
-        <div class="section-label">Overview</div>
-        <h2>What is this Project?</h2>
-        <p>This project involves building a fully containerized web application that runs inside Docker containers. Python Flask is used for the backend, PostgreSQL for the database, and both containers are connected via an IPvlan network where each container has its own static IP address. Data is permanently saved using a Named Volume.</p>
+<hr>
 
-        <div class="flow">
-            <div class="flow-item">🌐 Browser<small>localhost:5000</small></div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-item">🐍 pa1_backend<small>192.168.170.10</small></div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-item">🐘 pa1_db<small>192.168.170.11</small></div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-item">💾 pgdata<small>Named Volume</small></div>
-        </div>
-    </div>
+<p><strong>Name:</strong> Tanisha Thakur<br>
+<strong>Batch:</strong> B3<br>
+<strong>SAP ID:</strong> 500120261</p>
 
-    <!-- Technologies -->
-    <div class="section">
-        <div class="section-label">Technologies Used</div>
-        <div class="cards-grid">
-            <div class="info-card">
-                <div class="info-card-icon">🐍</div>
-                <h4>Python Flask</h4>
-                <p>Lightweight web framework. Two routes created — / serves the webpage and /api returns a JSON response.</p>
-            </div>
-            <div class="info-card">
-                <div class="info-card-icon">🐘</div>
-                <h4>PostgreSQL</h4>
-                <p>Production-grade relational database. A users table is created via init.sql with id and name columns.</p>
-            </div>
-            <div class="info-card">
-                <div class="info-card-icon">🐳</div>
-                <h4>Docker</h4>
-                <p>Multi-stage Dockerfile used — builder stage installs dependencies, runtime stage keeps only what's needed. A non-root user is added for security.</p>
-            </div>
-            <div class="info-card">
-                <div class="info-card-icon">🔧</div>
-                <h4>Docker Compose</h4>
-                <p>Both containers start with a single command — docker compose up --build -d. They start in the correct order automatically via depends_on.</p>
-            </div>
-            <div class="info-card">
-                <div class="info-card-icon">🌐</div>
-                <h4>IPvlan Network</h4>
-                <p>Each container is given a dedicated static IP — backend gets 192.168.170.10, database gets 192.168.170.11. Layer 2 mode is used.</p>
-            </div>
-            <div class="info-card">
-                <div class="info-card-icon">💾</div>
-                <h4>Named Volume</h4>
-                <p>The pgdata named volume ensures PostgreSQL data is permanently saved — even if the container is stopped or deleted, the data remains safe.</p>
-            </div>
-        </div>
-    </div>
+<hr>
 
-    <!-- docker ps -->
-    <div class="section">
-        <div class="section-label">Step 1 — Running Containers</div>
-        <h2>docker ps</h2>
-        <p>Both containers are running successfully — pa1_backend and pa1_db are both in Up status. The backend's port 5000 is mapped to the host.</p>
-        <div class="screenshot-card">
-            <div class="screenshot-header">
-                <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-                <div class="screenshot-title">$ docker ps</div>
-            </div>
-            <img src="screenshots/docker_ps.png" alt="docker ps output">
-        </div>
-        <div class="stack">
-            <span class="tag green">✅ pa1_backend — Up</span>
-            <span class="tag green">✅ pa1_db — Up</span>
-            <span class="tag green">✅ Port 5000 Mapped</span>
-        </div>
-    </div>
+<table>
+    <tr><th>Resource</th><th>Link</th></tr>
+    <tr><td>🌐 Live Project Page</td><td><a href="intro.html">Open Site</a></td></tr>
+</table>
 
-    <!-- docker images -->
-    <div class="section">
-        <div class="section-label">Step 2 — Docker Images</div>
-        <h2>docker images</h2>
-        <p>Thanks to the multi-stage build, the backend image is optimized in size. Both devops-project-backend and devops-project-db images have been successfully built.</p>
-        <div class="screenshot-card">
-            <div class="screenshot-header">
-                <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-                <div class="screenshot-title">$ docker images</div>
-            </div>
-            <img src="screenshots/docker_images.png" alt="docker images output">
-        </div>
-        <div class="pros-cons">
-            <div class="pro"><strong>✅ Advantage</strong>Multi-stage build reduces image size — only runtime essentials are included in the final image.</div>
-            <div class="con"><strong>⚠️ Note</strong>python:3.11-slim base image is used — significantly smaller than the full Python image.</div>
-        </div>
-    </div>
+<hr>
 
-    <!-- docker network inspect -->
-    <div class="section">
-        <div class="section-label">Step 3 — IPvlan Network</div>
-        <h2>docker network inspect ipvlan_net</h2>
-        <p>The IPvlan network is successfully configured. Both container static IPs are clearly visible — pa1_backend has 192.168.170.10 and pa1_db has 192.168.170.11. The driver is ipvlan and the mode is l2.</p>
-        <div class="screenshot-card">
-            <div class="screenshot-header">
-                <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-                <div class="screenshot-title">$ docker network inspect ipvlan_net</div>
-            </div>
-            <img src="screenshots/docker_network.png" alt="docker network inspect output">
-        </div>
-        <div class="stack">
-            <span class="tag green">✅ Driver: ipvlan</span>
-            <span class="tag green">✅ Mode: l2</span>
-            <span class="tag green">✅ Backend IP: 192.168.170.10</span>
-            <span class="tag green">✅ DB IP: 192.168.170.11</span>
-        </div>
-    </div>
+<h2>Project Overview</h2>
 
-    <!-- docker volume ls -->
-    <div class="section">
-        <div class="section-label">Step 4 — Named Volume</div>
-        <h2>docker volume ls</h2>
-        <p>The devops-project_pgdata named volume has been successfully created. All PostgreSQL data is stored here permanently.</p>
-        <div class="screenshot-card">
-            <div class="screenshot-header">
-                <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-                <div class="screenshot-title">$ docker volume ls</div>
-            </div>
-            <img src="screenshots/docker_volume_ls.png" alt="docker volume ls output">
-        </div>
-    </div>
+<p>This project demonstrates how to design, containerize, and deploy a web application using Docker.</p>
 
-    <!-- Persistence Test -->
-    <div class="section">
-        <div class="section-label">Step 5 — Persistence Test</div>
-        <h2>Data Persistence Verification</h2>
-        <p>This is the most important test — stop the containers, check the volume, restart them. The volume still exists after shutdown — this is proof of data persistence!</p>
-        <div class="screenshot-card">
-            <div class="screenshot-header">
-                <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-                <div class="screenshot-title">$ docker compose down → docker volume ls → docker compose up -d → docker volume ls</div>
-            </div>
-            <img src="screenshots/docker_compose.png" alt="docker compose persistence test">
-        </div>
-        <div class="pros-cons">
-            <div class="pro"><strong>✅ Proven</strong>Even after stopping containers, devops-project_pgdata volume persisted — data was safe!</div>
-            <div class="pro"><strong>✅ Restart</strong>After running docker compose up -d again, containers restarted fresh but data remained intact.</div>
-        </div>
-    </div>
+<p>The application consists of:</p>
+<ul>
+    <li><strong>Backend API:</strong> Python + Flask</li>
+    <li><strong>Database:</strong> PostgreSQL 15</li>
+    <li><strong>Orchestration:</strong> Docker Compose</li>
+    <li><strong>Networking:</strong> Docker IPvlan</li>
+    <li><strong>Storage:</strong> Docker Named Volume</li>
+</ul>
 
-    <!-- Running App -->
-    <div class="section">
-        <div class="section-label">Step 6 — Running Application</div>
-        <h2>Web Application</h2>
-        <p>The Flask backend is running successfully. Both the webpage and the /api endpoint are working.</p>
-        <div class="screenshot-card">
-            <div class="screenshot-header">
-                <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-                <div class="screenshot-title">http://localhost:5000</div>
-            </div>
-            <img src="screenshots/Screenshot_2026-03-20_221419.png" alt="Running web application">
-        </div>
-    </div>
+<hr>
 
-    <!-- File Structure -->
-    <div class="section">
-        <div class="section-label">Project Structure</div>
-        <h2>Folder Structure</h2>
-        <div class="code-block">devops-project/
+<h2>1. Introduction</h2>
+
+<p>Docker is a containerization platform that allows developers to package applications and their dependencies into portable containers. Docker Compose simplifies the orchestration of multi-container applications.</p>
+
+<p>This project implements a containerized web application using:</p>
+<ul>
+    <li><strong>Python + Flask</strong> as the backend API</li>
+    <li><strong>PostgreSQL</strong> as the relational database</li>
+    <li><strong>Docker Compose</strong> for container orchestration</li>
+    <li><strong>IPvlan networking</strong> for static IP assignment to containers</li>
+    <li><strong>Named volumes</strong> for persistent database storage</li>
+</ul>
+
+<hr>
+
+<h2>2. System Architecture</h2>
+
+<p>The application follows a two-tier architecture:</p>
+<ul>
+    <li><strong>Backend Layer:</strong> Python Flask REST API serving web pages and JSON responses</li>
+    <li><strong>Database Layer:</strong> PostgreSQL database for persistent data storage</li>
+</ul>
+
+<h3>Architecture Diagram</h3>
+<pre>
+Client (Browser)
+        |
+        | HTTP Request (Port 5000)
+        v
++-------------------------------+
+|  Backend Container            |
+|  Python + Flask               |
+|  IP Address: 192.168.170.10   |
+|  Port: 5000                   |
++-------------------------------+
+        |
+        | PostgreSQL Connection (Port 5432)
+        v
++-------------------------------+
+|  Database Container           |
+|  PostgreSQL 15                |
+|  IP Address: 192.168.170.11   |
+|  Port: 5432                   |
++-------------------------------+
+        |
+        v
++-------------------------------+
+|  Docker Named Volume          |
+|  pgdata                       |
+|  /var/lib/postgresql/data     |
++-------------------------------+
+</pre>
+
+<hr>
+
+<h2>3. Repository Structure</h2>
+
+<pre>
+devops-project/
+│
 ├── backend/
-│   ├── main.py              ← Flask server
-│   ├── requirements.txt     ← flask==3.0.0
-│   ├── Dockerfile           ← Multi-stage build
-│   ├── .dockerignore        ← Excludes unnecessary files
+│   ├── main.py              ← Flask server (routes and API)
+│   ├── Dockerfile           ← Backend Docker image
+│   ├── requirements.txt     ← Python dependencies
 │   └── templates/
-│       └── index.html       ← Web page
+│       └── index.html       ← Web UI served by Flask
+│
 ├── database/
 │   ├── Dockerfile           ← Custom PostgreSQL image
-│   └── init.sql             ← Creates users table
-└── docker-compose.yml       ← Defines all containers</div>
-    </div>
+│   └── init.sql             ← Auto-creates users table
+│
+└── docker-compose.yml       ← Orchestrates all containers
+</pre>
 
-    <!-- Key Concepts -->
-    <div class="section">
-        <div class="section-label">Key Concepts</div>
-        <h2>Important Learnings</h2>
+<hr>
 
-        <h3>Why Multi-stage Dockerfile?</h3>
-        <p>Stage 1 (builder) installs all dependencies. Stage 2 (runtime) copies only what is necessary — this results in a smaller and more secure final image. Adding a non-root user further improves security.</p>
+<h2>4. Application Endpoints</h2>
 
-        <h3>IPvlan vs Bridge Network</h3>
-        <p>In a Bridge network, all containers share the same network. In IPvlan, each container gets its own dedicated IP address — like different phones having different numbers. Containers can communicate directly using their IPs.</p>
+<table>
+    <tr><th>Endpoint</th><th>Method</th><th>Description</th></tr>
+    <tr><td>/</td><td>GET</td><td>Serves the main web page</td></tr>
+    <tr><td>/api</td><td>GET</td><td>Returns backend status as JSON</td></tr>
+</table>
 
-        <h3>Why is a Named Volume necessary?</h3>
-        <p>A container is temporary — when it stops, all data inside is lost. A Named Volume is permanent storage — even if the container is removed, the data stays safe. This is the core concept of persistence.</p>
+<h3>Example API Response</h3>
+<pre>
+{
+  "message": "DevOps Project 🚀",
+  "status": "Backend running successfully"
+}
+</pre>
 
-        <h3>Benefit of Docker Compose</h3>
-        <p>Instead of running multiple docker run commands separately, everything is defined in one file. The entire stack comes up with one command and goes down with one command. depends_on ensures containers start in the correct order.</p>
-    </div>
+<hr>
 
-</div>
+<h2>5. Source Code</h2>
+
+<h3>backend/main.py</h3>
+<pre>
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template("index.html")
+
+@app.route('/api')
+def api():
+    return {
+        "message": "DevOps Project 🚀",
+        "status": "Backend running successfully"
+    }
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+</pre>
+<img src="images/main_py.png" alt="main.py">
+
+<h3>backend/requirements.txt</h3>
+<pre>flask</pre>
+<img src="images/requirements.png" alt="requirements.txt">
+
+<h3>backend/Dockerfile</h3>
+<pre>
+FROM python:3.9
+
+WORKDIR /app
+
+COPY . .
+
+RUN pip install -r requirements.txt
+
+EXPOSE 5000
+
+CMD ["python", "main.py"]
+</pre>
+<img src="images/Dockerfile.png" alt="Dockerfile">
+
+<h3>backend/templates/index.html</h3>
+<p>The web UI served by Flask at <code>http://localhost:5000</code></p>
+<img src="images/template_index_.png" alt="index.html">
+
+<h3>database/Dockerfile</h3>
+<pre>
+FROM postgres:15-alpine
+
+ENV POSTGRES_DB=mydb
+ENV POSTGRES_USER=myuser
+ENV POSTGRES_PASSWORD=mypassword
+
+COPY init.sql /docker-entrypoint-initdb.d/
+
+EXPOSE 5432
+</pre>
+<img src="images/Dockerfile_database_.png" alt="database Dockerfile">
+
+<h3>database/init.sql</h3>
+<pre>
+CREATE TABLE IF NOT EXISTS users(
+  id SERIAL PRIMARY KEY,
+  name TEXT
+);
+</pre>
+<img src="images/init_sql.png" alt="init.sql">
+
+<h3>docker-compose.yml</h3>
+<pre>
+version: "3.9"
+
+services:
+
+  backend:
+    build: ./backend
+    container_name: pa1_backend
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: db
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    depends_on:
+      - db
+    networks:
+      ipvlan_net:
+        ipv4_address: 192.168.170.10
+
+  db:
+    image: postgres:15-alpine
+    container_name: pa1_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      ipvlan_net:
+        ipv4_address: 192.168.170.11
+
+networks:
+  ipvlan_net:
+    external: true
+
+volumes:
+  pgdata:
+</pre>
+<img src="images/docker-compose_yml.png" alt="docker-compose.yml">
+
+<hr>
+
+<h2>6. Container Networking</h2>
+
+<p>IPvlan networking is used to assign static IP addresses to containers. IPvlan allows containers to share the host's MAC address while having their own unique IP addresses on the network.</p>
+
+<h3>Network Creation Command</h3>
+<pre>
+docker network create \
+  -d ipvlan \
+  --subnet=192.168.160.0/20 \
+  --gateway=192.168.160.1 \
+  -o ipvlan_mode=l2 \
+  -o parent=eth0 \
+  ipvlan_net
+</pre>
+
+<h3>Assigned Container IPs</h3>
+<table>
+    <tr><th>Container</th><th>IP Address</th><th>Port</th></tr>
+    <tr><td>pa1_backend</td><td>192.168.170.10</td><td>5000</td></tr>
+    <tr><td>pa1_db</td><td>192.168.170.11</td><td>5432</td></tr>
+</table>
+
+<hr>
+
+<h2>7. IPvlan vs Macvlan Comparison</h2>
+
+<table>
+    <tr><th>Feature</th><th>IPvlan</th><th>Macvlan</th></tr>
+    <tr><td>Network Layer</td><td>Layer 3 (IP)</td><td>Layer 2 (Ethernet)</td></tr>
+    <tr><td>MAC Address</td><td>Shared host MAC</td><td>Unique MAC per container</td></tr>
+    <tr><td>Host Communication</td><td>Host can communicate</td><td>Host cannot directly access</td></tr>
+    <tr><td>Use Case</td><td>Cloud and virtualized environments</td><td>Simulating physical devices</td></tr>
+</table>
+
+<p><strong>Why IPvlan was chosen:</strong></p>
+<ul>
+    <li>Works well with WSL2 and virtualized environments</li>
+    <li>Host can communicate with containers</li>
+    <li>Suitable for cloud-based deployments</li>
+</ul>
+
+<hr>
+
+<h2>8. Build and Run</h2>
+
+<h3>Step 1 — Create Project Directory</h3>
+<pre>
+mkdir devops-project
+cd devops-project
+</pre>
+
+<h3>Step 2 — Create IPvlan Network</h3>
+<pre>
+docker network create \
+  -d ipvlan \
+  --subnet=192.168.160.0/20 \
+  --gateway=192.168.160.1 \
+  -o ipvlan_mode=l2 \
+  -o parent=eth0 \
+  ipvlan_net
+</pre>
+
+<h3>Step 3 — Build and Start Containers</h3>
+<pre>docker compose up --build -d</pre>
+
+<h3>Step 4 — Verify Running Containers</h3>
+<pre>docker ps</pre>
+<img src="images/docker_ps.png" alt="docker ps">
+
+<hr>
+
+<h2>9. Application Output</h2>
+
+<p>Web application running at <code>http://localhost:5000</code>:</p>
+<img src="images/Screenshot_2026-03-20_221419.png" alt="Web App">
+
+<hr>
+
+<h2>10. Verification</h2>
+
+<h3>Verify Docker Images</h3>
+<pre>docker images</pre>
+<img src="images/docker_images.png" alt="docker images">
+
+<h3>Verify Network</h3>
+<pre>docker network inspect ipvlan_net</pre>
+<img src="images/docker_network.png" alt="docker network inspect">
+
+<h3>Verify Volumes</h3>
+<pre>docker volume ls</pre>
+<img src="images/docker_volume_ls.png" alt="docker volume ls">
+
+<hr>
+
+<h2>11. Volume Persistence Test</h2>
+
+<p>The named volume <code>pgdata</code> ensures PostgreSQL data persists even after containers are stopped or restarted.</p>
+
+<table>
+    <tr><th>Benefit</th><th>Description</th></tr>
+    <tr><td>Data Survival</td><td>Data persists even if containers are stopped or removed</td></tr>
+    <tr><td>Easy Backup</td><td>Volume can be backed up independently</td></tr>
+    <tr><td>Isolation</td><td>Completely isolated from the container filesystem</td></tr>
+</table>
+
+<pre>
+# Stop containers (volume is NOT deleted)
+docker compose down
+
+# Confirm volume still exists
+docker volume ls | grep pgdata
+
+# Restart containers
+docker compose up -d
+
+# Volume and data still present!
+docker volume ls
+</pre>
+<img src="images/docker_compose.png" alt="Persistence Test">
+
+<hr>
+
+<h2>12. Notes on WSL2 + IPvlan</h2>
+
+<p>In WSL2, containers on an IPvlan network cannot be reached directly from the Windows host due to Hyper-V virtual switch NAT isolation. All testing is done from inside the container using <code>docker exec</code>. This is a known limitation.</p>
+
+<hr>
+
+<h2>13. Conclusion</h2>
+
+<p>By using Docker Compose and IPvlan networking, the Flask backend and PostgreSQL database are deployed as independent containers with static IP addresses. The named volume <code>pgdata</code> ensures that database data remains intact across container restarts, demonstrating persistent storage in a containerized environment.</p>
+
 </body>
 </html>
