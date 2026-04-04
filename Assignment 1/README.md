@@ -1,5 +1,3 @@
----
-layout: default
 title: Assignment 1 — Containerized Web App with PostgreSQL
 ---
 
