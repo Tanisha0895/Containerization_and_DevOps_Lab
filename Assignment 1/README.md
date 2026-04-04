@@ -1,4 +1,4 @@
-title: Assignment 1 — Containerized Web App with PostgreSQL
+Assignment 1 
 ---
 
 # Containerized Web Application with PostgreSQL using Docker Compose and IPvlan
