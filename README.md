@@ -5,7 +5,7 @@
 
 ## ASSIGNMENT
 
-* [Assignment 1](https://github.com/Tanisha0895/Containerization_and_DevOps_Lab/blob/main/Assignment%201/intro.html)
+* [Assignment 1](https://github.com/Tanisha0895/Containerization_and_DevOps_Lab/blob/main/Assignment%201/README.md)
 
 ##  Lab 
 
