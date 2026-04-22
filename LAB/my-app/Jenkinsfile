@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "tanisha0895/myapp"
-    }
+ environment {
+    IMAGE_NAME = "taniishaaa/myapp"
+}
 
     stages {
         stage('Clone Source') {
