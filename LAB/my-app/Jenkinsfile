@@ -6,12 +6,11 @@ pipeline {
     }
 
     stages {
-        stage('Clone Source') {
-            steps {
-                git 'https://github.com/Tanisha0895/Containerization_and_DevOps_Lab.git'
-            }
-        }
-
+     stage('Clone Source') {
+    steps {
+        git branch: 'main', url: 'https://github.com/Tanisha0895/Containerization_and_DevOps_Lab.git'
+    }
+}
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $IMAGE_NAME:latest LAB/my-app/'
