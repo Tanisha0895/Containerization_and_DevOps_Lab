@@ -1,28 +1,31 @@
 pipeline {
     agent any
 
- environment {
-    IMAGE_NAME = "taniishaaa/myapp"
-}
+    environment {
+        IMAGE_NAME = "taniishaaa/myapp"
+    }
 
     stages {
         stage('Clone Source') {
             steps {
-                git branch: 'main', url: 'https://github.com/Tanisha0895/Containerization_and_DevOps_Lab.git'
+                git 'https://github.com/Tanisha0895/Containerization_and_DevOps_Lab.git'
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $IMAGE_NAME:latest LAB/my-app/'
             }
         }
+
         stage('Login to Docker Hub') {
             steps {
                 withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKER_TOKEN')]) {
-                    sh 'echo $DOCKER_TOKEN | docker login -u tanisha0895 --password-stdin'
+                    sh 'echo $DOCKER_TOKEN | docker login -u taniishaaa --password-stdin'
                 }
             }
         }
+
         stage('Push to Docker Hub') {
             steps {
                 sh 'docker push $IMAGE_NAME:latest'
