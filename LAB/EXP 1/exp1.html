@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment 1 - VM vs Containers</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial;
+            background-color: #f6f8fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        pre {
+            background: #f6f8fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        code {
+            color: #d63384;
+        }
+
+        ul {
+            line-height: 1.8;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0969da;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧪 Experiment 1: VM vs Containers</h1>
+
+<h2>🎯 Objective</h2>
+<p>
+To understand the difference between Virtual Machines and Containers using Vagrant, VirtualBox, and Docker.
+</p>
+
+<h2>🛠️ Tools Required</h2>
+<ul>
+    <li>Vagrant</li>
+    <li>VirtualBox / QEMU</li>
+    <li>WSL</li>
+    <li>Docker</li>
+</ul>
+
+<h2>⚙️ Commands Used</h2>
+
+<pre>
+vagrant init ubuntu/jammy64
+vagrant up
+vagrant ssh
+sudo apt update
+sudo apt install nginx
+</pre>
+
+<pre>
+docker run -d -p 8080:80 nginx
+docker ps
+docker stop container_id
+</pre>
+
+<h2>📌 Procedure</h2>
+<ol>
+    <li>Initialize Vagrant environment</li>
+    <li>Start virtual machine using vagrant up</li>
+    <li>Login into VM using vagrant ssh</li>
+    <li>Install NGINX web server</li>
+    <li>Run Docker container with NGINX</li>
+    <li>Compare performance of VM and container</li>
+</ol>
+
+<h2>📊 Observations</h2>
+<ul>
+    <li>VM takes more time to start</li>
+    <li>Consumes more RAM and CPU</li>
+    <li>Container starts instantly</li>
+    <li>Uses fewer resources</li>
+</ul>
+
+<h2>💡 Conclusion</h2>
+<p>
+Containers are lightweight, faster, and more efficient compared to Virtual Machines because they share the host OS kernel.
+</p>
+
+<br>
+<a href="index.html">⬅ Back to Home</a>
+
+</div>
+
+</body>
+</html>
