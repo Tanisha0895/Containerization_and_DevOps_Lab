@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment 5 - Docker Volumes & Networks</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial;
+            background-color: #f6f8fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        pre {
+            background: #f6f8fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        ul {
+            line-height: 1.8;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0969da;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧪 Experiment 5: Docker Volumes, Environment Variables, Monitoring & Networks</h1>
+
+<h2>🎯 Objective</h2>
+<p>
+To understand Docker volumes for persistent storage, environment variables for configuration,
+monitoring tools, and networking between containers.
+</p>
+
+<h2>🛠️ Tools Required</h2>
+<ul>
+<li>Docker</li>
+<li>Linux / WSL</li>
+<li>Terminal</li>
+</ul>
+
+<h2>📚 Theory</h2>
+<p>
+Docker containers are temporary (ephemeral), meaning data inside them is lost when the container is removed.
+Docker volumes solve this problem by storing data outside the container lifecycle. :contentReference[oaicite:0]{index=0}  
+Docker networks allow communication between containers, enabling multi-container applications. :contentReference[oaicite:1]{index=1}
+</p>
+
+<h2>⚙️ Commands Used</h2>
+
+<h3>1️⃣ Create and Use Volume</h3>
+<pre>
+docker volume create mydata
+docker run -d --name web1 -v mydata:/app/data nginx
+docker volume ls
+docker volume inspect mydata
+</pre>
+
+<h3>2️⃣ Bind Mount</h3>
+<pre>
+docker run -d --name web2 -v ~/mydata:/app/data nginx
+</pre>
+
+<h3>3️⃣ Environment Variables</h3>
+<pre>
+docker run -d -e APP_ENV=production -e DEBUG=false myapp
+docker exec container-name printenv
+</pre>
+
+<h3>4️⃣ Monitoring Commands</h3>
+<pre>
+docker stats
+docker logs container-name
+docker top container-name
+docker inspect container-name
+</pre>
+
+<h3>5️⃣ Networking</h3>
+<pre>
+docker network ls
+docker network create app-network
+docker run -d --name db --network app-network postgres
+docker run -d --name web --network app-network myapp
+docker network inspect app-network
+</pre>
+
+<h2>📌 Procedure</h2>
+<ol>
+<li>Create container and observe data loss</li>
+<li>Create Docker volume and mount it</li>
+<li>Use bind mounts for host mapping</li>
+<li>Set environment variables using -e and env files</li>
+<li>Monitor containers using Docker commands</li>
+<li>Create custom network and connect containers</li>
+</ol>
+
+<h2>📊 Observations</h2>
+<ul>
+<li>Volumes preserve data even after container removal</li>
+<li>Environment variables allow dynamic configuration</li>
+<li>docker stats shows real-time resource usage</li>
+<li>Containers in same network communicate using names</li>
+</ul>
+
+<h2>💡 Conclusion</h2>
+<p>
+Docker volumes ensure persistent storage, environment variables enable flexible configuration,
+monitoring tools help track performance, and networks enable communication between containers,
+making Docker suitable for real-world applications.
+</p>
+
+<br>
+<a href="../index.html">⬅ Back to Home</a>
+
+</div>
+
+</body>
+</html>
