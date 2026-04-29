@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experiment 6 - Docker Compose</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; }
+  header { background: #161b22; padding: 40px 20px; text-align: center; border-bottom: 1px solid #30363d; }
+  header h1 { font-size: 2em; color: #58a6ff; margin-bottom: 10px; }
+  header p { color: #8b949e; }
+  .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+  h2 { color: #58a6ff; margin: 30px 0 15px; border-left: 4px solid #58a6ff; padding-left: 10px; }
+  h3 { color: #3fb950; margin: 20px 0 10px; }
+  p { color: #8b949e; line-height: 1.8; margin-bottom: 10px; }
+  pre { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 15px 0; }
+  code { color: #f0883e; font-family: monospace; font-size: 0.95em; }
+  table { width: 100%; border-collapse: collapse; background: #161b22; border-radius: 8px; overflow: hidden; margin: 15px 0; }
+  th { background: #21262d; color: #58a6ff; padding: 12px; text-align: left; border-bottom: 1px solid #30363d; }
+  td { padding: 12px; border-bottom: 1px solid #21262d; color: #8b949e; }
+  .objective { background: #161b22; border: 1px solid #30363d; border-left: 4px solid #58a6ff; padding: 20px; border-radius: 8px; margin: 20px 0; }
+  .back { display: inline-block; margin: 20px 0; color: #58a6ff; text-decoration: none; }
+  footer { text-align: center; padding: 30px; color: #8b949e; border-top: 1px solid #30363d; margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🐳 Experiment 6</h1>
+  <p>Comparison of Docker Run and Docker Compose</p>
+</header>
+
+<div class="container">
+  <a href="../../index.html" class="back">← Back to Home</a>
+
+  <div class="objective">
+    <h2>Objective</h2>
+    <p>To understand the relationship between <code>docker run</code> and Docker Compose, and to compare their configuration syntax and use cases.</p>
+  </div>
+
+  <h2>1. Background Theory</h2>
+
+  <h3>1.1 Docker Run (Imperative Approach)</h3>
+  <p>The <code>docker run</code> command is used to create and start a container from an image. It requires explicit flags for port mapping, volume mounting, environment variables, network configuration, restart policies, resource limits, and container name.</p>
+  <pre><code>docker run -d \
+  --name my-nginx \
+  -p 8080:80 \
+  -v ./html:/usr/share/nginx/html \
+  -e NGINX_HOST=localhost \
+  --restart unless-stopped \
+  nginx:alpine</code></pre>
+
+  <h3>1.2 Docker Compose (Declarative Approach)</h3>
+  <p>Docker Compose uses a YAML file to define services, networks, and volumes in a structured format. Instead of multiple docker run commands, a single command is used.</p>
+  <pre><code>docker compose up -d</code></pre>
+
+  <h2>2. Mapping: Docker Run vs Docker Compose</h2>
+  <table>
+    <tr><th>Docker Run Flag</th><th>Docker Compose Equivalent</th></tr>
+    <tr><td>-p 8080:80</td><td>ports:</td></tr>
+    <tr><td>-v host:container</td><td>volumes:</td></tr>
+    <tr><td>-e KEY=value</td><td>environment:</td></tr>
+    <tr><td>--name</td><td>container_name:</td></tr>
+    <tr><td>--network</td><td>networks:</td></tr>
+    <tr><td>--restart</td><td>restart:</td></tr>
+    <tr><td>--memory</td><td>deploy.resources.limits.memory</td></tr>
+    <tr><td>--cpus</td><td>deploy.resources.limits.cpus</td></tr>
+    <tr><td>-d</td><td>docker compose up -d</td></tr>
+  </table>
+
+  <h2>3. Practical Tasks</h2>
+
+  <h3>Task 1: Single Container — Docker Run</h3>
+  <pre><code>docker run -d --name lab-nginx -p 8081:80 nginx:alpine
+
+docker ps
+
+docker stop lab-nginx
+docker rm lab-nginx</code></pre>
+
+  <h3>Task 1: Single Container — Docker Compose</h3>
+  <pre><code>services:
+  nginx:
+    image: nginx:alpine
+    container_name: lab-nginx
+    ports:
+      - "8081:80"</code></pre>
+  <pre><code>docker compose up -d
+docker compose ps
+docker compose down</code></pre>
+
+  <h3>Task 2: Multi-Container — WordPress + MySQL</h3>
+  <pre><code>services:
+  mysql:
+    image: mysql:5.7
+    container_name: wordpress_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppass
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppass
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wp_data:/var/www/html
+
+volumes:
+  db_data:
+  wp_data:</code></pre>
+  <pre><code>docker compose up -d
+docker compose ps
+docker compose down -v</code></pre>
+
+  <h3>Task 3: Convert Docker Run to Compose — Problem 1</h3>
+  <pre><code>services:
+  webapp:
+    image: node:18-alpine
+    container_name: webapp
+    ports:
+      - "5000:5000"
+    environment:
+      - APP_ENV=production
+      - DEBUG=false
+    restart: unless-stopped</code></pre>
+
+  <h3>Task 4: Resource Limits</h3>
+  <pre><code>services:
+  limited-app:
+    image: nginx:alpine
+    container_name: limited-app
+    ports:
+      - "9000:80"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: '0.5'</code></pre>
+
+  <h3>Task 5: Custom Dockerfile — Node App</h3>
+  <pre><code>FROM node:18-alpine
+WORKDIR /app
+COPY app.js .
+EXPOSE 3000
+CMD ["node", "app.js"]</code></pre>
+  <pre><code>services:
+  nodeapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: custom-node-app
+    ports:
+      - "3000:3000"</code></pre>
+  <pre><code>docker compose up --build -d</code></pre>
+
+  <h3>Task 6: Multi-Stage Dockerfile</h3>
+  <pre><code>FROM node:18-alpine AS builder
+WORKDIR /app
+COPY app.js .
+
+FROM node:18-alpine AS production
+WORKDIR /app
+COPY --from=builder /app/app.js .
+EXPOSE 3000
+CMD ["node", "app.js"]</code></pre>
+
+  <h2>4. Advantages of Docker Compose</h2>
+  <ol style="color:#8b949e; padding-left:20px; line-height:2">
+    <li>Simplifies multi-container applications</li>
+    <li>Provides reproducibility</li>
+    <li>Version controllable configuration</li>
+    <li>Unified lifecycle management</li>
+    <li>Supports service scaling</li>
+  </ol>
+
+  <h2>5. Conclusion</h2>
+  <p>Docker Run is imperative — you specify step-by-step instructions. Docker Compose is declarative — you define the desired state. Compose is better for multi-container applications as it simplifies management and provides reproducibility.</p>
+
+</div>
+
+<footer>
+  <p>Tanisha Thakur | SAP ID: 500120261 | Batch: B3</p>
+</footer>
+
+</body>
+</html>
