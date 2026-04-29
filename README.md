@@ -20,3 +20,5 @@
 | EXP 7 | CI/CD Using Jenkins,Github And DockerHub | [View](https://github.com/Tanisha0895/Containerization_and_DevOps_Lab/tree/main/LAB/my-app) |
 | EXP 9 | Ansible| [View](https://github.com/Tanisha0895/Containerization_and_DevOps_Lab/tree/main/LAB/LAB%209) |
 | EXP 10 | SonarQube | [View](https://github.com/Tanisha0895/Containerization_and_DevOps_Lab/tree/main/LAB/EXP%2010) |
+| EXP 11 | Container Orchestration| [View](https://github.com/Tanisha0895/Containerization_and_DevOps_Lab/tree/main/LAB/EXP%2011) |
+| EXP 12 | Kubernetes | [View](https://github.com/Tanisha0895/Containerization_and_DevOps_Lab/tree/main/LAB/EXP%2012) |
