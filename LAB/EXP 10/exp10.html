@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment 10 - Web Application using Docker</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial;
+            background-color: #f6f8fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        pre {
+            background: #f6f8fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        ul {
+            line-height: 1.8;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0969da;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧪 Experiment 10: Web Application using Docker</h1>
+
+<h2>🎯 Objective</h2>
+<p>
+To learn Dockerfile instructions and build a Docker image for a sample web application.
+</p>
+
+<h2>📚 Theory</h2>
+<p>
+Dockerfile is a script containing instructions to build a Docker image. It defines the base image,
+working directory, dependencies, and execution command for an application. :contentReference[oaicite:1]{index=1}
+</p>
+
+<h2>🛠️ Tools Required</h2>
+<ul>
+<li>Docker</li>
+<li>Python Flask</li>
+<li>Linux / WSL</li>
+</ul>
+
+<h2>⚙️ Dockerfile Example</h2>
+<pre>
+FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+</pre>
+
+<h2>⚙️ Commands Used</h2>
+
+<h3>1️⃣ Build Image</h3>
+<pre>
+docker build -t flask-app .
+</pre>
+
+<h3>2️⃣ Check Images</h3>
+<pre>
+docker images
+</pre>
+
+<h3>3️⃣ Run Container</h3>
+<pre>
+docker run -d -p 5000:5000 flask-app
+</pre>
+
+<h3>4️⃣ Verify Application</h3>
+<pre>
+http://localhost:5000
+</pre>
+
+<h2>📌 Procedure</h2>
+<ol>
+<li>Create a sample Flask application</li>
+<li>Create requirements.txt file</li>
+<li>Write Dockerfile</li>
+<li>Build Docker image</li>
+<li>Run container</li>
+<li>Access application in browser</li>
+</ol>
+
+<h2>📊 Observations</h2>
+<ul>
+<li>Dockerfile automates image creation</li>
+<li>Application runs inside container</li>
+<li>Port mapping enables browser access</li>
+<li>Environment remains consistent</li>
+</ul>
+
+<h2>💡 Conclusion</h2>
+<p>
+Docker simplifies application deployment by packaging code and dependencies together, ensuring consistent behavior across environments.
+</p>
+
+<br>
+<a href="../index.html">⬅ Back to Home</a>
+
+</div>
+
+</body>
+</html>
