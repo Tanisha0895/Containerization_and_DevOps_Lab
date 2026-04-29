@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment 2 - Docker Basics</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial;
+            background-color: #f6f8fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+        pre {
+            background: #f6f8fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        ul {
+            line-height: 1.8;
+        }
+        a {
+            text-decoration: none;
+            color: #0969da;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>🧪 Experiment 2: Docker Installation & Basic Commands</h1>
+
+<h2>🎯 Objective</h2>
+<p>
+To understand Docker installation, working of Docker containers, and basic Docker commands.
+</p>
+
+<h2>🛠️ Tools Required</h2>
+<ul>
+<li>Docker</li>
+<li>WSL / Linux Environment</li>
+<li>Internet Connection</li>
+</ul>
+
+<h2>⚙️ Commands Used</h2>
+
+<pre>
+docker --version
+docker pull nginx
+docker images
+docker run -d -p 8080:80 nginx
+docker ps
+docker stop container_id
+docker rm container_id
+docker rmi image_id
+</pre>
+
+<h2>📌 Procedure</h2>
+<ol>
+<li>Install Docker in the system</li>
+<li>Verify installation using docker --version</li>
+<li>Pull nginx image from Docker Hub</li>
+<li>Run container using port mapping</li>
+<li>Check running containers</li>
+<li>Stop and remove container</li>
+<li>Remove unused images</li>
+</ol>
+
+<h2>📊 Output / Result</h2>
+<p>
+Successfully installed Docker and executed basic commands.  
+NGINX container was deployed and accessed via browser using localhost:8080.
+</p>
+
+<h2>💡 Conclusion</h2>
+<p>
+Docker simplifies application deployment by packaging applications and dependencies into containers, ensuring consistency across environments.
+</p>
+
+<br>
+<a href="../index.html">⬅ Back to Home</a>
+
+</div>
+</body>
+</html>
